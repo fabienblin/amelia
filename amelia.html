@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const IMAGE_SIZE = 1000
+        var more
+        var wrapper
+        var content
+        var test
+        var images
+        var limit
+
+        $(document).ready(function(){
+            // init
+            more = '<div style="height: 1000px;"></div>';
+            wrapper = document.getElementById("container");
+            content = document.getElementById("content");
+            test = document.getElementById("test");
+            images=[];
+            var i = 0
+            while(images[i] = document.getElementsBy) // load images
+                console.log(images[i]);
+            limit = images.length * IMAGE_SIZE;
+        
+            // run
+            main();
+        });
+        
+
+        function main () {
+
+            images[0].addClass("active");
+
+            content.innerHTML = more;
+
+            addEvent(wrapper,"scroll",scroller);
+            scroller()
+        }
+
+
+        function addEvent(obj,ev,fn) {
+            if(obj.addEventListener) obj.addEventListener(ev,fn,false);
+            else if(obj.attachEvent) obj.attachEvent("on"+ev,fn);    
+        }
+
+        function sinusoidAnimation(x, fadeout=0){
+            if (fadeout != 0 && fadeout != 1) return;
+
+            return (Math.sin(x * (1/IMAGE_SIZE) * Math.PI + (fadeout+.5) * Math.PI) + 1) / 2
+        }
+
+        function scroller() {
+            var scroll = wrapper.scrollTop
+            var current = parseInt(scroll / IMAGE_SIZE)
+            test.innerHTML = scroll
+
+            if(scroll > IMAGE_SIZE * images.length)
+                scroll = IMAGE_SIZE * images.length
+
+            if(scroll + wrapper.offsetHeight + 100 > content.offsetHeight) {
+                content.innerHTML+= more;
+            }
+
+        //var opacity_ratio = 0;
+
+            if (scroll <= limit){
+                imageScroll = scroll % IMAGE_SIZE
+                var opacity_in = sinusoidAnimation(imageScroll);
+                var opacity_out = sinusoidAnimation(imageScroll, 1)
+                
+                console.log("opacity_in "+opacity_in)
+                console.log("opacity_out "+opacity_out)
+
+                var i = 0
+                while (i < images.length){
+                    if(current > 0 && i > 0){ // gestion du previous, limite inférieure
+                        images[current-1].css("opacity", opacity_out);
+                        console.log("fade out image "+i)
+                    }
+                    else if(current == i){ // gestion du current
+                        images[current].css("opacity", opacity_in);
+                        console.log("fade in image "+i)
+                    }
+                    else
+                    {
+                        images[i].css("opacity", 0);
+                        console.log("opacity 0")
+                    }
+                    i++
+                }
+            }
+        }
+
+    
+
+    </script>
+</head> 
+<body>
+    <div id="test">scroll to understand</div>
+    <div id="container" style="height: 900px; overflow: auto;">
+    <div>
+        <img id="0" class="image" src="./simularbre.png"></img>
+        <img id="1" class="image" src="./pikachu.png"></img>
+        <img id="2" class="image" src="./torterra.png"></img>
+        <div id="content"></div>
+    </div>
+    </div>
+
+
+    </div>
+
+</body>
+
+<style>
+
+</style>
+
+</html>
