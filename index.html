@@ -50,14 +50,21 @@
         }
 
         function sinusoidAnimation(x, fadeout=0){
-            if (fadeout != 0 && fadeout != 1) return;
+            //if (x == 0) return 1;
 
-            return (Math.sin(x * (1/IMAGE_SIZE) * Math.PI + (fadeout+.5) * Math.PI) + 1) / 2
+            if (fadeout) {
+                return (Math.sin((x + (IMAGE_SIZE/2))*(1/IMAGE_SIZE)*Math.PI)+1)/2;
+            }
+            if (!fadeout) {
+                return (Math.sin((x - (IMAGE_SIZE/2))*(1/IMAGE_SIZE)*Math.PI)+1)/2;
+            }
+            return 0;
         }
 
         function scroller() {
             var scroll = wrapper.scrollTop
             var current = parseInt(scroll / IMAGE_SIZE)
+            var next = (current == images.length - 1) ? 0 : current + 1 // if next = 0 this means there is no next to handle
             test.innerHTML = scroll
 
             if(scroll > IMAGE_SIZE * images.length)
@@ -66,25 +73,33 @@
             if(scroll + wrapper.offsetHeight + 100 > content.offsetHeight) {
                 content.innerHTML+= more;
             }
-
-        //var opacity_ratio = 0;
-
+            
             if (scroll <= limit){
                 imageScroll = scroll % IMAGE_SIZE
-                var opacity_in = sinusoidAnimation(imageScroll);
                 var opacity_out = sinusoidAnimation(imageScroll, 1)
-                
-                console.log("opacity_in "+opacity_in)
-                console.log("opacity_out "+opacity_out)
+                var opacity_in = sinusoidAnimation(imageScroll);
 
                 var i = 0
                 while (i < images.length){
+                    if (current == i) {
+                        images[i].css("opacity", opacity_out);
+                        console.log("current opacity= "+ opacity_out)
+                    }
+                    else if (next && next == i) {
+                        images[i].css("opacity", opacity_in);
+                        console.log("next opacity= "+opacity_in)
+                    }
+                    else {
+                        images[i].css("opacity", 0);
+                        console.log("image "+i+" opacity 0")
+                    }
+                    /*
                     if(current > 0 && i > 0){ // gestion du previous, limite inférieure
-                        images[current-1].css("opacity", opacity_out);
+                        images[i-1].css("opacity", opacity_out);
                         console.log("fade out image "+i)
                     }
                     else if(current == i){ // gestion du current
-                        images[current].css("opacity", opacity_in);
+                        images[i].css("opacity", opacity_in);
                         console.log("fade in image "+i)
                     }
                     else
@@ -92,6 +107,7 @@
                         images[i].css("opacity", 0);
                         console.log("opacity 0")
                     }
+                    */
                     i++
                 }
             }
