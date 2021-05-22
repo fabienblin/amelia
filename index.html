@@ -82,12 +82,12 @@
                 while (i < images.length){
                     if (current == i) {
                         images[i].css("opacity", opacity_out)
-                        images[i].css("width", IMAGE_SIZE*opacity_out)
+                        images[i].css("width", IMAGE_SIZE+IMAGE_SIZE*opacity_in)
                         console.log("current opacity= "+ opacity_out)
                     }
                     else if (next && next == i) {
                         images[i].css("opacity", opacity_in)
-                        images[i].css("width", IMAGE_SIZE*opacity_in)
+                        images[i].css("width", IMAGE_SIZE-IMAGE_SIZE*opacity_out)
                         console.log("next opacity= "+opacity_in)
                     }
                     else {
